@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
@@ -28,7 +27,8 @@ func main(){
 			MaxAge: 300,
 		}))
 		v1Router := chi.NewRouter()
-		v1Router.HandleFunc("/ready",handlerReadyness)
+		v1Router.Get("/ready",handlerReadyness)
+		v1Router.Get("/errHandle",handlerErr)
 		router.Mount("/v1",v1Router)
 	 srv := &http.Server{
 		Handler: router,
