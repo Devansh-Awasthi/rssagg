@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Devansh-Awasthi/rssagg/internal/database"
 	"github.com/go-chi/chi"
@@ -19,7 +20,16 @@ type apiConfig struct {
 }
 
 func main() {
+
 	fmt.Println("RSS Agregator")
+	 rss, err := urlTofeed("https://economictimes.indiatimes.com/News/rssfeeds/1715249553.cms")
+    if err != nil {
+        panic(err)
+    }
+
+    for _, item := range rss.Channel.Items {
+        fmt.Println(item.Title, "-", item.Link)
+    }
 	godotenv.Load(".env")
 	PortVal := os.Getenv("PORT")
 
@@ -38,7 +48,7 @@ func main() {
 	apiCfg := apiConfig{
 		db: queries,
 	}
-
+	go startScraping(queries,10,time.Minute)
 	router := chi.NewRouter()
 	router.Use(
 		cors.Handler(cors.Options{
