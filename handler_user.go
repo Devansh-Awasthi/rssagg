@@ -37,3 +37,14 @@ func (apiCfg *apiConfig) handlegetUser(w http.ResponseWriter, r *http.Request,us
 	responseWithJSON(w, 200, databaseUsertoUser(user))
 
 }
+func (apiCfg *apiConfig) handlegetPost(w http.ResponseWriter, r *http.Request,user database.User) {
+	post,err := apiCfg.db.GetPostforUser(r.Context(),database.GetPostforUserParams{
+		UserID:user.ID,
+		Limit:10,
+	})
+	if err != nil {
+		responseWithErr(w, 400, fmt.Sprintf("Error on Getting Post:%s", err))
+		return
+	}
+	responseWithJSON(w, 200, DatabasePostsToPosts(post))
+}

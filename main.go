@@ -22,14 +22,14 @@ type apiConfig struct {
 func main() {
 
 	fmt.Println("RSS Agregator")
-	 rss, err := urlTofeed("https://economictimes.indiatimes.com/News/rssfeeds/1715249553.cms")
-    if err != nil {
-        panic(err)
-    }
+	//  rss, err := urlTofeed("https://economictimes.indiatimes.com/News/rssfeeds/1715249553.cms")
+    // if err != nil {
+    //     panic(err)
+    // }
 
-    for _, item := range rss.Channel.Items {
-        fmt.Println(item.Title, "-", item.Link)
-    }
+    // for _, item := range rss.Channel.Items {
+    //     fmt.Println(item.Title, "-", item.Link)
+    // }
 	godotenv.Load(".env")
 	PortVal := os.Getenv("PORT")
 
@@ -68,8 +68,8 @@ func main() {
 	v1Router.Get("/feeds", apiCfg.handlerGetFeeds)
 	v1Router.Post("/feed_following", apiCfg.middlewareAuth(apiCfg.handlerCreatefeedFollowing))
 	v1Router.Get("/feed_following", apiCfg.middlewareAuth(apiCfg.handlerGetFeedFollow))
+	v1Router.Get("/posts", apiCfg.middlewareAuth(apiCfg.handlegetPost))
 	v1Router.Delete("/feed_following/{feedFollowingID}", apiCfg.middlewareAuth(apiCfg.handlerDeleteFeedFollow))
-
 
 	router.Mount("/v1", v1Router)
 	srv := &http.Server{
